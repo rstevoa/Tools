@@ -1,5 +1,7 @@
 #!/bin/bash
 #
+# Guakinator: Script to make Terminator have a dropdown functionality
+#
 # Dependencies: wmctrl, xdotool
 #
 # To install: Copy this script somewhere. I use ~/.guakinator.
