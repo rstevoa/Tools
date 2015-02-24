@@ -1,0 +1,34 @@
+#!/bin/bash
+#
+# Dependencies: wmctrl, xdotool
+#
+# To install: Copy this script somewhere. I use ~/.guakinator.
+# Then use system settings to bind it to F12.
+
+PID=$(cat ./.pid)
+
+if [[ "$PID" != "" && $(pgrep terminator) != "" && "$PID" =~ $(pgrep terminator) ]]
+then
+    # Do I need to hide or unhide it?
+    if [[ $(cat ./.wid) =~ "-1" ]]
+    then
+        # Store WID; won't have it later otherwise
+        WID=$(wmctrl -p -l | grep $PID | grep -o "0x[0-9a-fA-F]*")
+        xdotool windowunmap $WID
+        echo $WID > "./.wid"
+    else
+        # Grab the WID from before
+        WID=$(cat ./.wid) 
+        xdotool windowmap $WID
+        wmctrl -i -r $WID -b add,maximized_horz
+        wmctrl -i -a $WID
+        echo -1 > ./.wid
+    fi
+else
+    # Terminator isn't active. We'll need to start it
+    terminator -b -f & echo $! > ./.pid
+    WID=$(wmctrl -p -l | grep $PID | grep -o "0x[0-9a-fA-F]*")
+    wmctrl -i -r $WID -b add,maximized_horz
+    wmctrl -i -a $WID
+    echo -1 > ./.wid
+fi
