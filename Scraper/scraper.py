@@ -1,3 +1,8 @@
+"""Don't use this. This isn't a safe scraper for reddit. It's unstable and sometimes
+it'll start throwing out too many requests.
+"""
+
+
 import requests
 import pygame
 import re
@@ -6,7 +11,7 @@ import time
 pygame.mixer.init()
 pygame.mixer.music.load('beep-04.mp3')
 
-reddit = 'http://www.reddit.com/r/MonsterHunter/comments/2sepqm?depth=3&limit=50&sort=new&showedits=false&showmore=false'
+reddit = ''
 headers = {
     'User-Agent': 'ScraperBot-Python2-Requests-4-per-minute'
 }
