@@ -1,34 +1,37 @@
 #!/bin/bash
 #
+# Guakinator: Script to make Terminator have a dropdown functionality
+#
 # Dependencies: wmctrl, xdotool
 #
 # To install: Copy this script somewhere. I use ~/.guakinator.
 # Then use system settings to bind it to F12.
 
-PID=$(cat ./.pid)
+BASE=$(dirname $0)
+PID=$(cat $BASE/.pid)
 
-if [[ "$PID" != "" && $(pgrep terminator) != "" && "$PID" =~ $(pgrep terminator) ]]
+if [[ "$PID" != "" && $(pgrep terminator) =~ "$PID" ]]
 then
     # Do I need to hide or unhide it?
-    if [[ $(cat ./.wid) =~ "-1" ]]
+    if [[ $(cat $BASE/.wid) == "-1" ]]
     then
         # Store WID; won't have it later otherwise
         WID=$(wmctrl -p -l | grep $PID | grep -o "0x[0-9a-fA-F]*")
         xdotool windowunmap $WID
-        echo $WID > "./.wid"
+        echo $WID > "$BASE/.wid"
     else
         # Grab the WID from before
-        WID=$(cat ./.wid) 
+        WID=$(cat $BASE/.wid) 
         xdotool windowmap $WID
         wmctrl -i -r $WID -b add,maximized_horz
         wmctrl -i -a $WID
-        echo -1 > ./.wid
+        echo -1 > "$BASE/.wid"
     fi
 else
     # Terminator isn't active. We'll need to start it
-    terminator -b -f & echo $! > ./.pid
+    terminator -b -f & echo $! > "$BASE/.pid"
     WID=$(wmctrl -p -l | grep $PID | grep -o "0x[0-9a-fA-F]*")
     wmctrl -i -r $WID -b add,maximized_horz
     wmctrl -i -a $WID
-    echo -1 > ./.wid
+    echo -1 > "$BASE/.wid"
 fi
