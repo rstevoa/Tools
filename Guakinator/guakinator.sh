@@ -7,8 +7,14 @@
 # To install: Copy this script somewhere. I use ~/.guakinator.
 # Then use system settings to bind it to F12.
 
-BASE=$(dirname $0)
+# Use home to allow an install to /opt without running into ownership issues
+BASE=$HOME/.guakinator
 PID=$(cat $BASE/.pid)
+
+if [ ! -d $BASE ]
+then
+	mkdir $BASE
+fi
 
 if [[ "$PID" != "" && $(pgrep -f terminator) =~ "$PID" ]]
 then
